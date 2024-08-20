@@ -30,12 +30,6 @@ class CustomSignupForm(SignupForm):
         authors_grupp = Group.objects.get(name='authors')
         user.groups.add(authors_grupp)
 
-        # send_mail(
-        #     subject='Добро пожаловать на новостной сайт!',
-        #     message=f'{user.username}, вы успешно зарегистрировались на нашем новостном порале!',
-        #     from_email=None,
-        #     recipient_list=[user.email],
-        # )
 
         subject = 'Добро пожаловать в наш новостной портал!'
         text = f'{user.username}, вы успешно зарегистрировались на сайте!'
