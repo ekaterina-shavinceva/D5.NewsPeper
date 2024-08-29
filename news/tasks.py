@@ -10,8 +10,7 @@ from news.models import Post, Category
 @shared_task
 def send_email_task(pk):
     post = Post.objects.get(pk=pk)
-    categories = post.post_category.all()
-    title = post.post_title
+    categories = post.category.all()
     subscribers_emails = []
     for category in categories:
         subscribers_users = category.subscribers.all()
@@ -20,7 +19,7 @@ def send_email_task(pk):
     html_content = render_to_string(
         'post_created_email.html',
         {
-            'text': f'{post.post_title}',
+            'text': f'{post.title}',
             'link': f'{settings.SITE_URL}/news/{pk}',
 
         }
@@ -30,7 +29,7 @@ def send_email_task(pk):
         subject='Новости за неделю',
         body='',
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=subscribers,
+        to=subscribers_emails,
 
     )
 
