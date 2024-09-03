@@ -19,19 +19,23 @@
 <a class="btn btn-primary" type="submit" href="search/">Поиск</a>
 <br>
 <br>
- {% if perms.news.add_post %}
-<a class="btn btn-primary" type="submit" href="create/">Опубликовать новость</a>
-{% endif %}
-<br>
-<br>
- {% if perms.news.add_post %}
-<a class="btn btn-primary" type="submit" href="articles/create/">Опубликовать статью</a>
-{% endif %}
-<br>
-<br>
-{% if perms.news.add_post %}
-<a class="btn btn-primary" type="submit" href="subscriptions/">Управление подписками</a>
-{% endif %}
+
+{% load cache %}
+{% cache 100 submit %}
+     {% if perms.news.add_post %}
+    <a class="btn btn-primary" type="submit" href="create/">Опубликовать новость</a>
+    {% endif %}
+    <br>
+    <br>
+     {% if perms.news.add_post %}
+    <a class="btn btn-primary" type="submit" href="articles/create/">Опубликовать статью</a>
+    {% endif %}
+    <br>
+    <br>
+    {% if perms.news.add_post %}
+    <a class="btn btn-primary" type="submit" href="subscriptions/">Управление подписками</a>
+    {% endif %}
+{% endcache %}
 
    <hr>
    {% if news %}
@@ -71,23 +75,28 @@
 
 
 {# Добавляем пагинацию на страницу #}
+    {% load cache %}
+    {% cache 100 pagination%}
 
-  {% if page_obj.has_previous %}
-       <a href="?{% url_replace page=1 %}">1</a>
-       {% if page_obj.previous_page_number != 1 %}
-           ...
-           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+      {% if page_obj.has_previous %}
+           <a href="?{% url_replace page=1 %}">1</a>
+           {% if page_obj.previous_page_number != 1 %}
+               ...
+               <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+           {% endif %}
        {% endif %}
-   {% endif %}
 
-   {{ page_obj.number }}
+       {{ page_obj.number }}
 
-   {% if page_obj.has_next %}
-       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
-       {% if paginator.num_pages != page_obj.next_page_number %}
-           ...
-           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% if page_obj.has_next %}
+           <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+           {% if paginator.num_pages != page_obj.next_page_number %}
+               ...
+               <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+           {% endif %}
        {% endif %}
-   {% endif %}
 
-{% endblock content %}
+    {% endcache %}
+
+    {% endblock content %}
+
