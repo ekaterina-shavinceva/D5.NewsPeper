@@ -75,8 +75,6 @@
 
 
 {# Добавляем пагинацию на страницу #}
-    {% load cache %}
-    {% cache 100 pagination%}
 
       {% if page_obj.has_previous %}
            <a href="?{% url_replace page=1 %}">1</a>
@@ -96,7 +94,6 @@
            {% endif %}
        {% endif %}
 
-    {% endcache %}
 
-    {% endblock content %}
+{% endblock content %}
 
