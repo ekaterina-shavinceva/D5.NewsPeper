@@ -6,6 +6,7 @@ from django.contrib import admin
 from django.urls import path, include
 from .resources import CONTENT, news
 from django.urls import reverse
+from django.core.cache import cache
 
 urlpatterns = [
    path('admin/', admin.site.urls),
@@ -68,6 +69,10 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[str(self.id)])
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # сначала вызываем метод родителя, чтобы объект сохранился
+        cache.delete(f'product-{self.pk}')  # затем удаляем его из кэша, чтобы сбросить его
 
 
 class PostCategory(models.Model):
