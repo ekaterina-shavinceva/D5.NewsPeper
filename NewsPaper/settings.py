@@ -188,3 +188,50 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_logger': False,
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'news'],
+            'level': 'DEBUG',
+        }
+    },
+
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'news': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.FileHandler',
+            'filename': 'general.log',
+            'formatter': 'myformater',
+        },
+        'mail_admins': {
+            'level': 'ERROR', 'CRITICAL'
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+    },
+    'formatters': {
+        'myformater': {
+            'format': '{asctime} {levelname} {message}',
+            'datetime': '%Y.%M.%D %H.%M.%S',
+            'style': '{',
+        },
+        'infoformat': {
+            'format': '{asctime} {levelname} {module} {message}',
+            'datetime': '%Y.%M.%D %H.%M.%S',
+            'style': '{',
+            },
+        },
+
+}
