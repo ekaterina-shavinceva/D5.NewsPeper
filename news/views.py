@@ -11,6 +11,20 @@ from django.db.models import Exists, OuterRef
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from django.core.cache import cache
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+def index(reguest):
+    logger.info('INFO')
+    news = Post.objects.all()
+    return render(reguest, 'index.html', context={'news': news})
+
+def detail(reguest, slug):
+    news = Post.objects.all()
+    new = Post.objects.get(slug__iexact=slug)
+    return render(reguest, 'details.html', context={'new': new, 'news': news})
 
 
 
