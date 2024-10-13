@@ -88,7 +88,7 @@ TEMPLATES = [
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'cache_files'), # Указываем, куда будем сохранять кэшируемые файлы!
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),  # Указываем, куда будем сохранять кэшируемые файлы!
     }
 }
 
@@ -168,7 +168,7 @@ ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # отправка писем на почту
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # вывод сообщения в консоль
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # вывод сообщения в консоль
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'shavinceva-ekaterina@yandex.ru'
@@ -195,7 +195,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'style' : '{',
+    'style': '{',
     'formatters': {
         'simple': {
             'format': '%(acstime)s %(levelname)s %(message)s',
@@ -272,7 +272,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'logs/security.log',
-            'formatter': 'security'
+            'formatter': 'format_security'
         },
         'mail_admin': {
             'level': 'ERROR',
@@ -282,11 +282,11 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'console_wqrning', 'console_error', 'general'],
+            'handlers': ['console', 'console_warning', 'console_error', 'general'],
             'propagate': True,
         },
         'django.request': {
-            'handlers': ['errors', 'mail_admins'],
+            'handlers': ['errors', 'mail_admin'],
             'propagate': True,
         },
         'django.server': {
@@ -306,4 +306,5 @@ LOGGING = {
         },
 
     },
+
 }
