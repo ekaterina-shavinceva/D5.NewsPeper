@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+import logging
+
+logger = logging.getLogger('django')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -191,47 +194,116 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 LOGGING = {
     'version': 1,
-    'disable_existing_logger': False,
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'news'],
-            'level': 'DEBUG',
-        }
+    'disable_existing_loggers': False,
+    'style' : '{',
+    'formatters': {
+        'simple': {
+            'format': '%(acstime)s %(levelname)s %(message)s',
+            'datefmt': "%D.%M.%Y %H-%M-%S"
+        },
+        'format_warning': {
+            'format': '%(acstime)s %(levelname)s %(message)s %(pathname)s',
+            'datefmt': "%D.%M.%Y %H-%M-%S"
+        },
+        'format_error': {
+            'format': '%(acstime)s %(levelname)s %(message)s %(exc_info)s',
+            'datefmt': "%D.%M.%Y %H-%M-%S"
+        },
+        'format_general': {
+            'format': '%(acstime)s %(levelname)s %(module)s %(message)s',
+            'datefmt': "%D.%M.%Y %H-%M-%S"
+        },
+        'errors': {
+            'format': '%(acstime)s %(levelname)s %(pathname)s %(message)s (exc_info)s',
+            'datefmt': "%D.%M.%Y %H-%M-%S"
+        },
+        'format_email': {
+            'format': '%(acstime)s %(levelname)s %(message)s %(pathname)s',
+            'datefmt': "%D.%M.%Y %H-%M-%S"
+        },
+        'format_security': {
+            'format': '%(acstime)s %(levelname)s %(module)s %(message)s',
+            'datefmt': "%D.%M.%Y %H-%M-%S"
+        },
     },
 
     'filters': {
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
         },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
     },
 
     'handlers': {
         'console': {
-            'class': 'logging.StreamHandler',
-        },
-        'news': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'filters': ['require_debug_true'],
-            'class': 'logging.FileHandler',
-            'filename': 'general.log',
-            'formatter': 'myformater',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
         },
-        'mail_admins': {
-            'level': 'ERROR', 'CRITICAL'
-            'class': 'django.utils.log.AdminEmailHandler'
+        'console_warning': {
+            'level': 'WARNING',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'format_warning'
+        },
+        'console_error': {
+            'level': 'ERROR',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'format_error'
+        },
+        'general': {
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            'class': 'logging.FileHandler',
+            'filename': 'logs/general.log',
+            'formatter': 'format_general',
+        },
+        'errors': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/errors.log',
+            'formatter': 'errors'
+        },
+        'security': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/security.log',
+            'formatter': 'security'
+        },
+        'mail_admin': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'format_email'
         },
     },
-    'formatters': {
-        'myformater': {
-            'format': '{asctime} {levelname} {message}',
-            'datetime': '%Y.%M.%D %H.%M.%S',
-            'style': '{',
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'console_wqrning', 'console_error', 'general'],
+            'propagate': True,
         },
-        'infoformat': {
-            'format': '{asctime} {levelname} {module} {message}',
-            'datetime': '%Y.%M.%D %H.%M.%S',
-            'style': '{',
-            },
+        'django.request': {
+            'handlers': ['errors', 'mail_admins'],
+            'propagate': True,
+        },
+        'django.server': {
+            'propagate': True,
+        },
+        'django.template': {
+            'handlers': ['errors'],
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['errors'],
+            'propagate': True,
+        },
+        'django.security': {
+            'handlers': ['security'],
+            'propagate': True,
         },
 
+    },
 }
